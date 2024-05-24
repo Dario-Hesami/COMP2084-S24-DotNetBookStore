@@ -1,15 +1,26 @@
-﻿@{
+﻿@model IEnumerable<DotNetBookStore.Models.Category>
+
+@{
     ViewData["Title"] = "Categories";
 }
 <h1>Shop our Store</h1>
 <ul>
-    <li>
-        <a asp-controller="Categories" asp-action="Browse">Category 1</a>
-    </li>
-    <li>
-        <a asp-controller="Categories" asp-action="Browse">Category 2</a>
-    </li>
-    <li>
-        <a asp-controller="Categories" asp-action="Browse">Category 3</a>
-    </li>
+    @foreach (var c in Model)
+    {
+        <li>
+            <a asp-controller="Categories" asp-action="Browse" asp-route-category="@c.Name">@c.Name</a>
+        </li>
+    }
 </ul>
+
+@* <ul>
+    <li>
+        <a asp-controller="Categories" asp-action="Browse" asp-route-category="Category 1">Category 1</a>
+    </li>
+    <li>
+        <a asp-controller="Categories" asp-action="Browse" asp-route-category="Category 2">Category 2</a>
+    </li>
+    <li>
+        <a asp-controller="Categories" asp-action="Browse" asp-route-category="Category 3">Category 3</a>
+    </li>
+</ul> *@
