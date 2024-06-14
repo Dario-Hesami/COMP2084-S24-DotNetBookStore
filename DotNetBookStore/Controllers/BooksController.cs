@@ -57,10 +57,17 @@ namespace DotNetBookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,Author,Title,Image,Price,MatureContent,CategoryId")] Book book)
+        public async Task<IActionResult> Create([Bind("BookId,Author,Title,Price,MatureContent,CategoryId")] Book book, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
+                // upload Image if there is one
+                if (Image != null)
+                {
+                    var fileName = UploadImage(Image);
+                    book.Image = fileName;
+
+                }
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,7 +89,7 @@ namespace DotNetBookStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", book.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(c => c.Name), "CategoryId", "Name", book.CategoryId);
             return View(book);
         }
 
@@ -91,7 +98,7 @@ namespace DotNetBookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,Author,Title,Image,Price,MatureContent,CategoryId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookId,Author,Title,Price,MatureContent,CategoryId")] Book book,IFormFile? Image, string? CurrentImage)
         {
             if (id != book.BookId)
             {
@@ -102,6 +109,21 @@ namespace DotNetBookStore.Controllers
             {
                 try
                 {
+                    // upload image if there is one
+                    if (Image != null)
+                    {
+                        var fileName = UploadImage(Image);
+                        book.Image = fileName;
+                    }
+                    else
+                    {
+                        // if this book already has an image (we keep the current image)
+                        if (CurrentImage != null)
+                        {
+                            book.Image = CurrentImage;
+                        }
+
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -161,7 +183,7 @@ namespace DotNetBookStore.Controllers
             return _context.Books.Any(e => e.BookId == id);
         }
 
-        private string UploadImage(IFormFile image)
+        private static string UploadImage(IFormFile image)
         {
             // get temp location of uploaded file
             var filePath = Path.GetTempFileName();
@@ -169,7 +191,7 @@ namespace DotNetBookStore.Controllers
             // e.g book1.jpg => 96243hsJJDs89-book1.jpg
             var fileName = Guid.NewGuid() + "-" + image.FileName;
             // set destination path dynamically so it runs on any system
-            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\books" + fileName;
+            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\books\\" + fileName;
             // execute the file transfer
             using (var stream = new FileStream(uploadPath, FileMode.Create))
             {

@@ -19,7 +19,7 @@
                 <a href="#">@Html.DisplayNameFor(model => model.Title)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Image)
+                @* @Html.DisplayNameFor(model => model.Image) *@
             </th>
             <th>
                 <a href="#">@Html.DisplayNameFor(model => model.Price)</a>
@@ -43,7 +43,15 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                    @if (item.Image != null)
+                    {
+                        <img src="~/img/books/@item.Image" alt="Book Cover" class="img-fluid img-thumbnail" style="max-width:60%" />
+                    }
+                    else
+                    {
+                        <img src="~/img/books/bookcover-placeholder.jpg" alt="Book Cover" class="img-fluid img-thumbnail" style="max-width:60%" />
+                    }
+                    @* @Html.DisplayFor(modelItem => item.Image) *@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
