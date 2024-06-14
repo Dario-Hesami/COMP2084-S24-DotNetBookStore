@@ -20,11 +20,15 @@ namespace DotNetBookstore.Models
 
         [Required]
         [Range(0.01, 999999)]
+        // c = MS currency format
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Price { get; set; }
 
+        [Display(Name = "Mature Content")]
         public bool MatureContent { get; set; }
 
         //FK
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         // child references

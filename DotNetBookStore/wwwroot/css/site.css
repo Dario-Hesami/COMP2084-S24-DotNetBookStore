@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+th > a {
+    text-decoration: none;
+}

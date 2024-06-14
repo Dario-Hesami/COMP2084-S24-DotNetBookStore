@@ -48,7 +48,7 @@ namespace DotNetBookStore.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(c => c.Name), "CategoryId", "Name");
             return View();
         }
 
@@ -159,6 +159,24 @@ namespace DotNetBookStore.Controllers
         private bool BookExists(int id)
         {
             return _context.Books.Any(e => e.BookId == id);
+        }
+
+        private string UploadImage(IFormFile image)
+        {
+            // get temp location of uploaded file
+            var filePath = Path.GetTempFileName();
+            // use Globally Unique Identifier (GUID) class to create unique name
+            // e.g book1.jpg => 96243hsJJDs89-book1.jpg
+            var fileName = Guid.NewGuid() + "-" + image.FileName;
+            // set destination path dynamically so it runs on any system
+            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\books" + fileName;
+            // execute the file transfer
+            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            {
+                image.CopyTo(stream);
+            }
+            // return new file name
+            return fileName;
         }
     }
 }
