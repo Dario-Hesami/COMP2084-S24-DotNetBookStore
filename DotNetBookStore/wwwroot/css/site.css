@@ -19,6 +19,19 @@ html {
 
 body {
   margin-bottom: 60px;
+  font-family: 'Rubik, sans-serif'
+}
+
+a {
+    color: #03A9F0;
+}
+
+.btn-primary {
+    background-color: #03A9F4;
+}
+
+.navbar-dark {
+    background-color: #3F51B5;
 }
 
 th > a {
