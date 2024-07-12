@@ -37,3 +37,7 @@ a {
 th > a {
     text-decoration: none;
 }
+
+.card-body > a {
+    text-decoration: none;
+}
